@@ -242,9 +242,9 @@ pipeline {
                     
                 }
                 
-                    sh "kubectl run hello-dotnet --image=${DOCKER_REG_HUB}/${IMAGE_NAME}:${DOCKER_TAG} --port=8089 -n development"
+                    sh "kubectl run hello-dotnet --image=${DOCKER_REG_HUB}/${IMAGE_NAME}:${DOCKER_TAG} --port=8080 -n development"
                     sleep 60
-                    sh "kubectl expose deployment hello-dotnet --type=LoadBalancer --port=8089 -n development"
+                    sh "kubectl expose deployment hello-dotnet --type=LoadBalancer --port=8080 -n development"
             }
         }
 
