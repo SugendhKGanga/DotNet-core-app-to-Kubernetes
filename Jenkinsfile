@@ -173,8 +173,8 @@ pipeline {
         stage('Build and tests') {
             steps {
                 echo "Building application and Docker image"
-                chmod 777 build.sh
-                chown build.sh
+                sh "chmod 777 ${WORKSPACE}/build.sh"
+                sh "chown ${WORKSPACE}/build.sh"
                 sh "${WORKSPACE}/build.sh --build --registry ${DOCKER_REG} --tag ${DOCKER_TAG} --docker_usr ${DOCKER_USR} --docker_psw ${DOCKER_PSW}"
 
                 echo "Running tests"
