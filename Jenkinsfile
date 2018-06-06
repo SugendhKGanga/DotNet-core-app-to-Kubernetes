@@ -31,7 +31,7 @@ def helmInstall (namespace, release) {
         sh """
             helm upgrade --install --namespace ${namespace} ${release} \
                 --set imagePullSecrets=${IMG_PULL_SECRET} \
-                --set image.repository=${DOCKER_REG_HUB}/${IMAGE_NAME},image.tag=${DOCKER_TAG} helm/acme
+                --set image.repository=${DOCKER_REG_HUB}/${IMAGE_NAME},image.tag=${DOCKER_TAG} helm/dotnetcore
         """
         sh "sleep 5"
     }
@@ -109,7 +109,7 @@ pipeline {
 
     // Some global default variables
     environment {
-        IMAGE_NAME = 'acme'
+        IMAGE_NAME = 'dotnetcore'
         TEST_LOCAL_PORT = 8817
         DEPLOY_PROD = false
         PARAMETERS_FILE = "${JENKINS_HOME}/parameters.groovy"
