@@ -235,13 +235,13 @@ pipeline {
                     createNamespace (namespace)
 
 
-                    kubectl run hello-dotnet \
-                        --image=gcr.io/${PROJECT_ID}/hello-dotnet:v1 \
-                        --port=8089 -n development
-                    sleep 60
-                    kubectl expose deployment hello-dotnet --type="LoadBalancer" --port=8089 -n development
+
                     
                 }
+                
+                    kubectl run hello-dotnet --image=gcr.io/${PROJECT_ID}/hello-dotnet:v1 --port=8089 -n development
+                    sleep 60
+                    kubectl expose deployment hello-dotnet --type="LoadBalancer" --port=8089 -n development
             }
         }
 
