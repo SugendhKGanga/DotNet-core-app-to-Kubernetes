@@ -234,12 +234,7 @@ pipeline {
                     echo "Deploying application ${ID} to ${namespace} namespace"
                     createNamespace (namespace)
 
-                    // Remove release if exists
-                    //helmDelete (namespace, "${ID}")
 
-                    // Deploy with helm
-                    //echo "Deploying"
-                    //helmInstall(namespace, "${ID}")
                     kubectl run hello-dotnet \
                         --image=gcr.io/${PROJECT_ID}/hello-dotnet:v1 \
                         --port=8089 -n development
