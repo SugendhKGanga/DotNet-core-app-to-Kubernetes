@@ -201,11 +201,13 @@ pipeline {
                 stage('Curl total_time') {
                     steps {
                         //curlRun ("http://localhost:${TEST_LOCAL_PORT}", 'total_time')
+                        echo "to do"
                     }
                 }
                 stage('Curl size_download') {
                     steps {
                         //curlRun ("http://localhost:${TEST_LOCAL_PORT}", 'size_download')
+                        echo "to do"
                     }
                 }
             }
