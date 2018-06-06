@@ -181,7 +181,7 @@ pipeline {
                 sh "[ -z \"\$(docker ps -a | grep ${ID} 2>/dev/null)\" ] || docker rm -f ${ID}"
 
                 echo "Starting ${IMAGE_NAME} container"
-                sh "docker run --detach --name ${ID} --rm --publish ${TEST_LOCAL_PORT}:80 ${DOCKER_REG_HUB}/${IMAGE_NAME}:${DOCKER_TAG}"
+                sh "docker run --detach --name ${ID} --rm --publish ${TEST_LOCAL_PORT}:8080 ${DOCKER_REG_HUB}/${IMAGE_NAME}:${DOCKER_TAG}"
 
                 script {
                     host_ip = sh(returnStdout: true, script: '/sbin/ip route | awk \'/default/ { print $3 ":${TEST_LOCAL_PORT}" }\'')
@@ -194,17 +194,18 @@ pipeline {
             parallel {
                 stage('Curl http_code') {
                     steps {
-                        curlRun ("http://localhost:${TEST_LOCAL_PORT}", 'http_code')
+                        //curlRun ("http://localhost:${TEST_LOCAL_PORT}", 'http_code')
+                        echo "to do!"
                     }
                 }
                 stage('Curl total_time') {
                     steps {
-                        curlRun ("http://localhost:${TEST_LOCAL_PORT}", 'total_time')
+                        //curlRun ("http://localhost:${TEST_LOCAL_PORT}", 'total_time')
                     }
                 }
                 stage('Curl size_download') {
                     steps {
-                        curlRun ("http://localhost:${TEST_LOCAL_PORT}", 'size_download')
+                        //curlRun ("http://localhost:${TEST_LOCAL_PORT}", 'size_download')
                     }
                 }
             }
@@ -219,8 +220,8 @@ pipeline {
                 echo "Pushing ${DOCKER_REG}/${IMAGE_NAME}:${DOCKER_TAG} image to registry"
                 sh "${WORKSPACE}/build.sh --push --registry ${DOCKER_REG} --tag ${DOCKER_TAG} --docker_usr ${DOCKER_USR} --docker_psw ${DOCKER_PSW}"
 
-                echo "Packing helm chart"
-                sh "${WORKSPACE}/build.sh --pack_helm --push_helm --helm_repo ${HELM_REPO} --helm_usr ${HELM_USR} --helm_psw ${HELM_PSW}"
+                //echo "Packing helm chart"
+                //sh "${WORKSPACE}/build.sh --pack_helm --push_helm --helm_repo ${HELM_REPO} --helm_usr ${HELM_USR} --helm_psw ${HELM_PSW}"
             }
         }
 
@@ -234,11 +235,17 @@ pipeline {
                     createNamespace (namespace)
 
                     // Remove release if exists
-                    helmDelete (namespace, "${ID}")
+                    //helmDelete (namespace, "${ID}")
 
                     // Deploy with helm
-                    echo "Deploying"
-                    helmInstall(namespace, "${ID}")
+                    //echo "Deploying"
+                    //helmInstall(namespace, "${ID}")
+                    kubectl run hello-dotnet \
+                        --image=gcr.io/${PROJECT_ID}/hello-dotnet:v1 \
+                        --port=8080
+                    sleep 60
+                    kubectl expose deployment hello-dotnet --type="LoadBalancer" --port=8080
+                    
                 }
             }
         }
@@ -264,6 +271,7 @@ pipeline {
             }
         }
 
+/*        
         stage('Cleanup dev') {
             steps {
                 script {
@@ -397,4 +405,6 @@ pipeline {
             }
         }
     }
+    
+*/
 }
