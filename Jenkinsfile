@@ -177,7 +177,7 @@ pipeline {
                 //sh "chmod 777 ${WORKSPACE}/dotnet_sdk_install.sh"
                 
                 //sh "${WORKSPACE}/dotnet_sdk_install.sh"
-                sh "dotnet publish -c Release"
+                //sh "dotnet publish -c Release"
                 sh "${WORKSPACE}/build.sh --build --registry ${DOCKER_REG} --tag ${DOCKER_TAG} --docker_usr ${DOCKER_USR} --docker_psw ${DOCKER_PSW}"
 
                 echo "Running tests"
