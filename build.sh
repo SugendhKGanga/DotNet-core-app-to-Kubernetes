@@ -67,18 +67,15 @@ buildDockerImage () {
     echo -e "\nBuilding ${DOCKER_REPO}:${DOCKER_TAG}"
 
     # Prepare build directory
-    echo -e "\nPreparing files"
+    #echo -e "\nPreparing files"
     #mkdir -p ${BUILD_DIR}/site
-    mkdir -p ${BUILD_DIR}
-    cp -v  ${SCRIPT_DIR}/docker/Dockerfile ${BUILD_DIR}
-    #cp -rv ${SCRIPT_DIR}/src/* ${BUILD_DIR}/site/
-
-    # Embed the app version
-    echo -e "\nWriting version ${DOCKER_TAG} to files"
-    sed -i.org "s/__APP_VERSION__/${DOCKER_TAG}/g" ${BUILD_DIR}/site/*.html
-    rm -f ${BUILD_DIR}/site/*.org
+    #mkdir -p ${BUILD_DIR}
+    #cp -v  ${SCRIPT_DIR}/docker/Dockerfile ${BUILD_DIR}
     
     ls
+    
+    dotnet publish -c Release
+    
     echo -e "\nBuilding Docker image"
     docker build -t ${DOCKER_REG_HUB}/${DOCKER_REPO}:${DOCKER_TAG} ${BUILD_DIR} || errorExit "Building ${DOCKER_REPO}:${DOCKER_TAG} failed"
 }
