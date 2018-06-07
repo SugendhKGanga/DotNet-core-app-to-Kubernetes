@@ -77,7 +77,7 @@ buildDockerImage () {
     dotnet publish -c Release
     
     echo -e "\nBuilding Docker image"
-    docker build -t ${DOCKER_REG_HUB}/${DOCKER_REPO}:${DOCKER_TAG} ${BUILD_DIR} || errorExit "Building ${DOCKER_REPO}:${DOCKER_TAG} failed"
+    docker build -t ${DOCKER_REG_HUB}/${DOCKER_REPO}:${DOCKER_TAG} ./docker || errorExit "Building ${DOCKER_REPO}:${DOCKER_TAG} failed"
 }
 
 # Push Docker images
