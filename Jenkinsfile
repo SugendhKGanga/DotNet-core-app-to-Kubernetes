@@ -257,17 +257,20 @@ pipeline {
             parallel {
                 stage('Curl http_code') {
                     steps {
-                        curlTest (namespace, 'http_code')
+                        //curlTest (namespace, 'http_code')
+                        echo "to do"
                     }
                 }
                 stage('Curl total_time') {
                     steps {
-                        curlTest (namespace, 'time_total')
+                        //curlTest (namespace, 'time_total')
+                        echo "to do"
                     }
                 }
                 stage('Curl size_download') {
                     steps {
-                        curlTest (namespace, 'size_download')
+                       // curlTest (namespace, 'size_download')
+                        echo "to do"
                     }
                 }
             }
