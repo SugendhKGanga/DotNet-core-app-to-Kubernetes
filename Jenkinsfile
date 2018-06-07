@@ -275,6 +275,50 @@ pipeline {
                 }
             }
         }
+        
+        ////////// Step 5 //////////
+        stage('Deploy to staging') {
+            steps {
+                script {
+                    namespace = 'staging'
+
+                    echo "Deploying application ${ID} to ${namespace} namespace"
+                    createNamespace (namespace)
+
+
+
+                    
+                }
+                
+                    sh "kubectl run hello-dotnet --image=${DOCKER_REG_HUB}/${IMAGE_NAME}:${DOCKER_TAG} --port=8080 -n staging"
+                    sleep 60
+                    sh "kubectl expose deployment hello-dotnet --type=LoadBalancer --port=8080 -n staging"
+            }
+        }
+
+        // Run the 3 tests on the deployed Kubernetes pod and service
+        stage('Staging tests') {
+            parallel {
+                stage('Curl http_code') {
+                    steps {
+                        //curlTest (namespace, 'http_code')
+                        echo "to do"
+                    }
+                }
+                stage('Curl total_time') {
+                    steps {
+                        //curlTest (namespace, 'time_total')
+                        echo "to do"
+                    }
+                }
+                stage('Curl size_download') {
+                    steps {
+                       // curlTest (namespace, 'size_download')
+                        echo "to do"
+                    }
+                }
+            }
+        }
 
 /*        
         stage('Cleanup dev') {
