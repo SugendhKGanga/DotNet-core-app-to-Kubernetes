@@ -68,9 +68,10 @@ buildDockerImage () {
 
     # Prepare build directory
     echo -e "\nPreparing files"
-    mkdir -p ${BUILD_DIR}/site
+    #mkdir -p ${BUILD_DIR}/site
+    mkdir -p ${BUILD_DIR}
     cp -v  ${SCRIPT_DIR}/docker/Dockerfile ${BUILD_DIR}
-    cp -rv ${SCRIPT_DIR}/src/* ${BUILD_DIR}/site/
+    #cp -rv ${SCRIPT_DIR}/src/* ${BUILD_DIR}/site/
 
     # Embed the app version
     echo -e "\nWriting version ${DOCKER_TAG} to files"
