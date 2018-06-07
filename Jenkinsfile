@@ -319,7 +319,74 @@ pipeline {
                 }
             }
         }
-
+        
+        ////////// Step 6 //////////
+        // Waif for user manual approval, or proceed automatically if DEPLOY_TO_PROD is true
+        stage('Go for Production?') {
+            when {
+                allOf {
+                    environment name: 'GIT_BRANCH', value: 'master'
+                    environment name: 'DEPLOY_TO_PROD', value: 'false'
+                }
+            }
+            steps {
+                // Prevent any older builds from deploying to production
+                milestone(1)
+                input 'Proceed and deploy to Production?'
+                milestone(2)
+                script {
+                    DEPLOY_PROD = true
+                }
+            }
+        }
+        stage('Deploy to Production') {
+            when {
+                anyOf {
+                    expression { DEPLOY_PROD == true }
+                    environment name: 'DEPLOY_TO_PROD', value: 'true'
+                }
+            }
+            steps {
+                script {
+                    DEPLOY_PROD = true
+                    namespace = 'production'
+                    echo "Deploying application ${IMAGE_NAME}:${DOCKER_TAG} to ${namespace} namespace"
+                    createNamespace (namespace)
+                    // Deploy with helm
+                    echo "Deploying"
+                    //helmInstall (namespace, "${ID}")
+                }
+					sh "kubectl run hello-dotnet --image=${DOCKER_REG_HUB}/${IMAGE_NAME}:${DOCKER_TAG} --port=8080 -n production"
+                    sleep 60
+                    sh "kubectl expose deployment hello-dotnet --type=LoadBalancer --port=8080 -n production"
+            }
+        }
+        // Run the 3 tests on the deployed Kubernetes pod and service
+        stage('Production tests') {
+            when {
+                expression { DEPLOY_PROD == true }
+            }
+            parallel {
+                stage('Curl http_code') {
+                    steps {
+                        //curlTest (namespace, 'http_code')
+						echo "to do"
+                    }
+                }
+                stage('Curl total_time') {
+                    steps {
+                        //curlTest (namespace, 'time_total')
+						echo "to do"
+                    }
+                }
+                stage('Curl size_download') {
+                    steps {
+                        //curlTest (namespace, 'size_download')
+						echo "to do"
+                    }
+                }
+            }
+        }
 /*        
         stage('Cleanup dev') {
             steps {
